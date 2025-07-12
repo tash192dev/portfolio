@@ -1,45 +1,75 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Tash's Portfolio</title>
-  <link rel="stylesheet" href="style.css" />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tash's Portfolio</title>
+    <link rel="stylesheet" href="style.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r152/three.min.js"></script>
+
 </head>
+
 <body>
-  <header>
-    <h1>Tash</h1>
-    <nav>
-      <a href="#about">About</a>
-      <a href="#projects">Projects</a>
-      <a href="#contact">Contact</a>
-    </nav>
-  </header>
+    <header>
+        <h1>Tash</h1>
+        <nav>
+            <a href="#about">About</a>
+            <a href="#projects">Projects</a>
+            <a href="#contact">Contact</a>
+        </nav>
+    </header>
 
-  <main>
-    <section id="about">
-      <h2>About Me</h2>
-      <p>Hello! I'm Tash, a developer passionate about building cool things with code.</p>
-    </section>
+    <main>
+        <section id="about">
+            <h2>About Me</h2>
+            <p>Hello! I'm Tash, a developer passionate about building cool things with code.</p>
+        </section>
 
-    <section id="projects">
-      <h2>Projects</h2>
-      <ul>
-        <li>Project One - <a href="#">GitHub Link</a></li>
-        <li>Project Two - <a href="#">GitHub Link</a></li>
-      </ul>
-    </section>
+        <section id="projects">
+            <h2>Projects</h2>
+            <ul>
+                <li>Project One - <a href="#">GitHub Link</a></li>
+                <li>Project Two - <a href="#">GitHub Link</a></li>
+            </ul>
+        </section>
 
-    <section id="contact">
-      <h2>Contact</h2>
-      <p>Email me at: <a href="mailto:youremail@example.com">youremail@example.com</a></p>
-    </section>
-  </main>
+        <section id="contact">
+            <h2>Contact</h2>
+            <p>Email me at: <a href="mailto:youremail@example.com">youremail@example.com</a></p>
+        </section>
+    </main>
 
-  <footer>
-    <p>&copy; 2025 Tash. All rights reserved.</p>
-  </footer>
+    <footer>
+        <p>&copy; 2025 Tash. All rights reserved.</p>
+    </footer>
+    <script id="vertexShader" type="x-shader/x-vertex">
+uniform float uTime;
+varying vec2 vUv;
+#include <common>
+#pragma glslify: pnoise = require(glsl-noise/periodic/3d)
 
-  <script src="script.js"></script>
+void main(){
+  vUv = uv;
+  vec3 pos = position;
+  float t = uTime * .1;
+  float distortion = pnoise(normal + t, vec3(10.0)) * 1.5;
+  pos += normal * distortion;
+  gl_Position = projectionMatrix * modelViewMatrix * vec4(pos,1.0);
+}
+</script>
+
+    <script id="fragmentShader" type="x-shader/x-fragment">
+varying vec2 vUv;
+uniform float uTime;
+
+void main(){
+  float c = 0.5 + 0.5 * sin(uTime + vUv.x * 10.0);
+  gl_FragColor = vec4(c, 0.7*c, 1.0-c, 1.0);
+}
+</script>
+
+    <script src="script.js"></script>
 </body>
+
 </html>
